@@ -1,0 +1,32 @@
+name: Build executable
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build whitelist-bot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20.12'
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - run: bun install
+      - run: bun run build:production
+      - id: version
+        run: |
+          VERSION=$(sed 's/.*"version": "\(.*\)".*/\1/;t;d' ./package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development build ${{ steps.version.outputs.VERSION }}"
+          files: |
+            bin/*
