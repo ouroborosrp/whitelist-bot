@@ -20,7 +20,7 @@ jobs:
       - run: bun run build:production
       - id: version
         run: |
-          VERSION=$(sed 's/.*"version": "\(.*\)".*/\1/;t;d' ./package.json)
+          VERSION=$(jq -r .version package.json)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
