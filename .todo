@@ -1,0 +1,4 @@
+/whitelist <ip>
+
+-> Check if player is whitelist (has role: whitelisted) and hasn't already been IP whitelisted
+-> Create logs on ds
